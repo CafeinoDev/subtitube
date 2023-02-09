@@ -2,12 +2,16 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from "prop-types";
 import { Box, Center, Text } from '@chakra-ui/react';
 import { SubtitleCards } from './SubtitleCards';
+import { useYoutube } from '../hooks/useYoutube';
 
 const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
-  const [currentSubtitleIndex, setCurrentSubtitleIndex] = useState(null);
-  const [intervalId, setIntervalId] = useState(null);
-  const [player, setPlayer] = useState(null);
-  const [playerLoaded, setPlayerLoaded] = useState(false);
+  const {
+      currentSubtitleIndex,
+      intervalId,
+      player,
+      playerLoaded,
+      handleChange
+  } = useYoutube();
 
   useEffect(() => {
     const tag = document.createElement('script');
@@ -21,7 +25,7 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
         height,
         width,
         videoId: video.id,
-        playerVars: { 'controls': 0 },
+        playerVars: { 'controls': '0', 'cc_lang_pref': 'sg' },
         events: {
           'onReady': onPlayerReady,
           'onStateChange': onPlayerStateChange,
@@ -29,15 +33,14 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
         }
       });
 
-      setPlayer(newPlayer);
+      handleChange('player', newPlayer);
     };
   }, [video]);
 
 
   useEffect(() => {
     if (player && playerLoaded) {
-
-      setIntervalId(setInterval(() => {
+      handleChange('intervalId', setInterval(() => {
         if (player.getPlayerState() === window.YT.PlayerState.PLAYING) {
           onPlayerStateChange({ target: player });
         }
@@ -51,7 +54,7 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
   
 
   const onPlayerReady = (event) => {
-    setPlayerLoaded(true);
+    handleChange('playerLoaded', true);
     event.target.playVideo();
   }
 
@@ -65,7 +68,7 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
 
     const currentTime = target.getCurrentTime();
     const nextSubtitleIndex = video.subtitles.findIndex(subtitle => subtitle.start <= currentTime && subtitle.end > currentTime) ?? '';
-    setCurrentSubtitleIndex(nextSubtitleIndex);
+    handleChange('currentSubtitleIndex', nextSubtitleIndex)
   }
 
   const handlePlay = () => {
