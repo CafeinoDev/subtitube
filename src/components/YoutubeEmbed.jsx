@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from "prop-types";
-import { Box, Center, Text } from '@chakra-ui/react';
+import { Box, Center } from '@chakra-ui/react';
 import { SubtitleCards } from './SubtitleCards';
 import { useYoutube } from '../hooks/useYoutube';
+import '../styles/app.css'
 
 const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
   const {
@@ -28,8 +29,7 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
         playerVars: { 'controls': '0', 'cc_lang_pref': 'sg' },
         events: {
           'onReady': onPlayerReady,
-          'onStateChange': onPlayerStateChange,
-          'onSeek' : onPlayerStateChange
+          'onStateChange': onPlayerStateChange
         }
       });
 
@@ -67,8 +67,9 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
     // }
 
     const currentTime = target.getCurrentTime();
-    const nextSubtitleIndex = video.subtitles.findIndex(subtitle => subtitle.start <= currentTime && subtitle.end > currentTime) ?? '';
-    handleChange('currentSubtitleIndex', nextSubtitleIndex)
+    const nextSubtitleIndex = video.subtitles.findIndex(subtitle => subtitle.start <= currentTime && subtitle.end > currentTime) ?? -1;
+    handleChange('lastSubtitle', currentSubtitleIndex + 1);
+    handleChange('currentSubtitleIndex', nextSubtitleIndex);
   }
 
   const handlePlay = () => {

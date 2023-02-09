@@ -5,6 +5,7 @@ export const useYoutube = () => {
     const [intervalId, setIntervalId] = useState(null);
     const [player, setPlayer] = useState(null);
     const [playerLoaded, setPlayerLoaded] = useState(false);
+    const [lastSubtitle, setLastSubtitle] = useState(-1);
 
     const handleChange = (type, payload) => {
         switch(type){
@@ -20,6 +21,9 @@ export const useYoutube = () => {
             case 'playerLoaded':
                 setPlayerLoaded(payload)
             break;
+            case 'lastSubtitle':
+                setLastSubtitle(payload)
+            break;
         }
     }
     return {
@@ -27,6 +31,7 @@ export const useYoutube = () => {
         intervalId,
         player,
         playerLoaded,
+        lastSubtitle,
         handleChange
     };
 }

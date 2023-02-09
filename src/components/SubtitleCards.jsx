@@ -1,5 +1,5 @@
-import { Box, Card, CardBody, Text } from '@chakra-ui/react'
 import React from 'react'
+import { Box, Card, CardBody, Text, Skeleton, SkeletonText } from '@chakra-ui/react'
 
 export const SubtitleCards = ({ subtitles = [], currentSubtitle = -1 }) => {
   return (
@@ -13,6 +13,12 @@ export const SubtitleCards = ({ subtitles = [], currentSubtitle = -1 }) => {
                     </CardBody>
                 </Card>
             ) ) }
+
+            <Card variant='outline' display={ currentSubtitle === -1 ? 'block' : 'none' }>
+                <CardBody>
+                    <SkeletonText noOfLines={2} spacing='4' skeletonHeight='4' />
+                </CardBody>
+            </Card>
         </Box>
     </>
   )
