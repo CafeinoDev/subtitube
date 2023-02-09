@@ -20,6 +20,7 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
         height,
         width,
         videoId: video.id,
+        playerVars: { 'controls': 0, 'modestbranding': 1, 'rel' : 0 },
         events: {
           'onReady': onPlayerReady,
           'onStateChange': onPlayerStateChange,
@@ -46,12 +47,14 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
   }, [player, playerLoaded]);
 
   
-  function onPlayerReady(event) {
+  
+
+  const onPlayerReady = (event) => {
     setPlayerLoaded(true);
     event.target.playVideo();
   }
 
-  function onPlayerStateChange(event) {
+  const onPlayerStateChange = (event) => {
     const { target, data } = event;
     // Data: -1 Cargado sin iniciar, 0 Terminado, 2 Paused, 1 Playing
 
@@ -63,7 +66,7 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
     const nextSubtitleIndex = video.subtitles.findIndex(subtitle => subtitle.start <= currentTime && subtitle.end > currentTime) ?? '';
     setCurrentSubtitleIndex(nextSubtitleIndex);
   }
-
+ 
   return (
     <Box>
       <Center>
@@ -80,7 +83,7 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
             <Text fontSize='lg'>-</Text>
             <Text fontSize='sm'>-</Text>
           </>
-        )}
+        )} 
       </div>
     </Box>
   );
