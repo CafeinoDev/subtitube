@@ -1,0 +1,1 @@
+{"version":3,"file":"static/css/main.cf0bfe33.css","mappings":"AAAA,cACI,iBAAoB,CACpB,UACJ,CAEA,oCACI,cACI,gBACJ,CACJ","sources":["styles/app.css"],"sourcesContent":["#video_player{\r\n    aspect-ratio: 16 / 9;\r\n    width: 100%;\r\n}\r\n\r\n@media screen and (max-width: 768px){\r\n    #video_player{\r\n        max-height: 200px;\r\n    }\r\n}"],"names":[],"sourceRoot":""}
