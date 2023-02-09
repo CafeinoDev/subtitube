@@ -1,0 +1,10 @@
+#video_player{
+    aspect-ratio: 16 / 9;
+    width: 100%;
+}
+
+@media screen and (max-width: 768px){
+    #video_player{
+        max-height: 200px;
+    }
+}
