@@ -28,7 +28,6 @@ import { list } from '../data/videolist';
           pos={'relative'}
           zIndex={1}>
             <Center>
-                {/* Aquí iría el iframe */}
                 <YoutubeEmbed video={ list['TnGl01FkMMo'] } />
             </Center>
         </Box>

@@ -70,18 +70,10 @@ export const list = {
             },
             {
                 start: 69,
-                end: 71,
-                text: {
-                    "en": 'Oh, I got this.',
-                    "es": 'Oh, lo tengo.'
-                }
-            },
-            {
-                start: 71,
                 end: 72,
                 text: {
-                    "en": 'No problem.',
-                    "es": 'Sin problemas.'
+                    "en": 'Oh, I got this. No problem.',
+                    "es": 'Oh, lo tengo. Sin problemas.'
                 }
             },
             {

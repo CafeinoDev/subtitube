@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from "prop-types";
 import { Box, Center, Text } from '@chakra-ui/react';
+import { SubtitleCards } from './SubtitleCards';
 
 const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
   const [currentSubtitleIndex, setCurrentSubtitleIndex] = useState(null);
@@ -20,7 +21,7 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
         height,
         width,
         videoId: video.id,
-        playerVars: { 'controls': 0, 'modestbranding': 1, 'rel' : 0 },
+        playerVars: { 'controls': 0 },
         events: {
           'onReady': onPlayerReady,
           'onStateChange': onPlayerStateChange,
@@ -66,25 +67,21 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
     const nextSubtitleIndex = video.subtitles.findIndex(subtitle => subtitle.start <= currentTime && subtitle.end > currentTime) ?? '';
     setCurrentSubtitleIndex(nextSubtitleIndex);
   }
+
+  const handlePlay = () => {
+    (player.getPlayerState() != 1) ? player.playVideo() : player.pauseVideo();
+  }
  
   return (
     <Box>
-      <Center>
-        <div id="video_player"></div>
+      <Center onClick={ handlePlay } cursor='pointer'>
+        <div style={{ pointerEvents: 'none' }}>
+          <div id="video_player"></div>
+        </div>
       </Center>
-      <div>
-        {video.subtitles[currentSubtitleIndex] ? (
-          <>
-            <Text fontSize='lg'>{ video.subtitles[currentSubtitleIndex].text.en }</Text>
-            <Text fontSize='sm'>{ video.subtitles[currentSubtitleIndex].text.es }</Text>
-          </>
-        ) : (
-          <>
-            <Text fontSize='lg'>-</Text>
-            <Text fontSize='sm'>-</Text>
-          </>
-        )} 
-      </div>
+      <Box mt={6}>
+        <SubtitleCards subtitles={ video.subtitles } currentSubtitle={ currentSubtitleIndex } />
+      </Box>
     </Box>
   );
 
