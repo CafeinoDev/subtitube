@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import PropTypes from "prop-types";
-import { Box, Button, Center, HStack, Icon } from '@chakra-ui/react';
-import { ArrowBackIcon, ArrowForwardIcon, RepeatIcon, TriangleDownIcon } from '@chakra-ui/icons';
-import { FaPlay, FaPause } from 'react-icons/fa'
+import { Box, Center, Skeleton } from '@chakra-ui/react';
 import { SubtitleCards } from './SubtitleCards';
 import { useYoutube } from '../hooks/useYoutube';
+import { handleNextPrevButtons, handlePlay, handleSeekTo } from '../helpers/playerFunctions';
+import { YoutubeControls } from './YoutubeControls';
 import '../styles/app.css'
-
 
 const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
   const {
@@ -19,8 +18,6 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
       playerState,
       handleChange
   } = useYoutube(null);
-
-
 
   useEffect(() => {
     const tag = document.createElement('script');
@@ -44,8 +41,6 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
       handleChange('player', newPlayer);
     };
   }, [video]);
-
-
   useEffect(() => {
     if (player && playerLoaded) {
       handleChange('intervalId', setInterval(() => {
@@ -57,22 +52,19 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
       return () => clearInterval(intervalId);
     }
   }, [player, playerLoaded]);
-
-  
   
   useEffect( ()  => {
     if(repeat && actualSubtitle >= 0 && (actualSubtitle !== currentSubtitleIndex)){
-      handleSeekTo(video.subtitles[actualSubtitle].start);
+      handleSeekTo(player, video.subtitles[actualSubtitle].start);
       return;
     }
 
     handleChange('actualSubtitle', currentSubtitleIndex);
   }, [currentSubtitleIndex]);
 
-
   const onPlayerReady = (event) => {
     handleChange('playerLoaded', true);
-    event.target.playVideo();
+    // event.target.playVideo();
     event.target.seekTo(14);
   }
 
@@ -84,57 +76,33 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
 
     handleChange('currentSubtitleIndex', nextSubtitleIndex);
   }
-
-  const handleNextPrevButtons = (opt) => {
-    let currentSubtitleIndex = actualSubtitle + opt;
-
-
-    if(actualSubtitle == -1){
-      const currentTime = player.getCurrentTime();
-      if (opt === 1) {
-        currentSubtitleIndex = video.subtitles.findIndex(subtitle => subtitle.start >= currentTime);
-      } else {
-        currentSubtitleIndex = video.subtitles.findIndex((subtitle, index, subtitles) => subtitle.start <= currentTime && subtitles[index + 1]?.start > currentTime);
-      }
-    }
-    
-    if(video.subtitles.length <= currentSubtitleIndex || currentSubtitleIndex < 0){
-      return;
-    }
-
-    handleChange('actualSubtitle', currentSubtitleIndex);
-    handleSeekTo(video.subtitles[currentSubtitleIndex].start);
-  }
-
-  const handlePlay = () => {
-    if(player.getPlayerState() != 1) {
-      player.playVideo()
-      handleChange('playerState', true)  
-    }else{
-      player.pauseVideo();
-      handleChange('playerState', false)  
-    } 
-  }
-
-  const handleSeekTo = (seconds) => {
-    player.seekTo(seconds);
-  }
  
   return (
     <Box w='100%'>
-      <Center onClick={ handlePlay } cursor='pointer'>
+
+      <Skeleton height='360px' isLoaded={playerLoaded} display={ playerLoaded ? 'none' : 'block' } />
+      <Center onClick={ () => handlePlay(player, handleChange) } cursor='pointer' display={ playerLoaded ? 'block' : 'none' }>
         <div style={{ pointerEvents: 'none' }}>
           <div id="video_player"></div>
         </div>
       </Center>
 
       <Box>
-        <HStack mt={3}>
-          <Button colorScheme='teal' variant='outline' onClick={ () => handleNextPrevButtons(-1) }><ArrowBackIcon /></Button>
-          <Button colorScheme='teal' variant='outline' onClick={ () => handleNextPrevButtons(1) }><ArrowForwardIcon /></Button>
-          <Button colorScheme='teal' onClick={ () => { handleChange('repeat') } } variant={ repeat ? 'solid' : 'outline' }><RepeatIcon /></Button>
-          <Button colorScheme='teal' variant='outline' onClick={ handlePlay }><Icon as={ playerState == 1 ? FaPause : FaPlay  } /></Button>
-        </HStack>
+
+        <Skeleton mt={3} height="40px" isLoaded={playerLoaded} display={ playerLoaded ? 'none' : 'block' } />
+
+        <YoutubeControls 
+          actualSubtitle={ actualSubtitle } 
+          handleChange={ handleChange } 
+          player={ player } 
+          playerState={ playerState } 
+          repeat={ repeat } 
+          video={ video } 
+          playerLoaded={ playerLoaded }
+          handleNextPrevButtons={ handleNextPrevButtons }
+          handleSeekTo={ handleSeekTo }
+          handlePlay={ handlePlay }
+        />
 
         <Box mt={3} >
           <SubtitleCards subtitles={ video.subtitles } currentSubtitle={ actualSubtitle } />
@@ -142,7 +110,6 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
       </Box>
     </Box>
   );
-
 };
 
 YoutubeEmbed.propTypes = {
