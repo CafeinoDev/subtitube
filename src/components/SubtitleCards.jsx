@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Card, CardBody, Text, Skeleton, SkeletonText } from '@chakra-ui/react'
+import { Box, Card, CardBody, Text, SkeletonText } from '@chakra-ui/react'
 
 export const SubtitleCards = ({ subtitles = [], currentSubtitle = -1 }) => {
   return (
