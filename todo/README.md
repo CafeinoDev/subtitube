@@ -2,6 +2,7 @@
 - [x] Implement a card system to display subtitles and corresponding vocabulary
 - [ ] Add the ability to choose a language for subtitles
 - [ ] Add a feature to allow users to save their progress
+- [ ] Implement the ability for users to add a YouTube video and transcribe its content
 - [ ] Implement a way for users to test their understanding with quizzes
 - [ ] Add the ability to switch between different YouTube videos
 - [ ] Add a feature to allow users to search for videos based on language or topic
