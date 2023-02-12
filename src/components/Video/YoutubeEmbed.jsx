@@ -9,14 +9,15 @@ import '../../styles/app.css'
 
 const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
   const {
+      actualSubtitle,
       currentSubtitleIndex,
+      currentTime,
+      handleChange,
       intervalId,
       player,
       playerLoaded,
-      repeat,
-      actualSubtitle,
       playerState,
-      handleChange
+      repeat,
   } = useYoutube(null);
 
   useEffect(() => {
