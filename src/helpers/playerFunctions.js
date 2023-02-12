@@ -1,13 +1,13 @@
 export const handleNextPrevButtons = (opt, actualSubtitle, video, handleChange, player, handleSeekTo) => {
     let currentSubtitleIndex = actualSubtitle + opt;
-    
-    if (actualSubtitle === -1) {
+
+    if (actualSubtitle === null || actualSubtitle === -1) {
         const currentTime = player.getCurrentTime();
-    if (opt === 1) {
-        currentSubtitleIndex = video.subtitles.findIndex(subtitle => subtitle.start >= currentTime);
-    } else {
-        currentSubtitleIndex = video.subtitles.findIndex((subtitle, index, subtitles) => subtitle.start <= currentTime && subtitles[index + 1]?.start > currentTime);
-    }
+        if (opt === 1) {
+            currentSubtitleIndex = video.subtitles.findIndex(subtitle => subtitle.start >= currentTime);
+        } else {
+            currentSubtitleIndex = video.subtitles.findIndex((subtitle, index, subtitles) => subtitle.start <= currentTime && subtitles[index + 1]?.start > currentTime || Object.is(subtitles[index + 1], undefined));
+        }
     }
     
     if (video.subtitles.length <= currentSubtitleIndex || currentSubtitleIndex < 0) {

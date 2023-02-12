@@ -102,7 +102,7 @@ export const list = {
             },
             {
                 start: 91,
-                end: 93,
+                end: 94,
                 text: {
                     "en": 'With a lot of galaxies.',
                     "es": 'Con muchas galaxias.'
@@ -125,5 +125,139 @@ export const list = {
                 }
             },
         ]
-    }
+    },
+    'roIzrtl_4J4' : {
+        id: 'roIzrtl_4J4',
+        title: 'Despicable Me 2 | Clip: "Jillian Shows Up at Gru\'s House with a Potential Date"',
+        originalLang: 'en',
+        subtitles: [
+            {
+                start: 1,
+                end: 6,
+                text: {
+                    "en": 'Gru, it\'s Jillian! I\'ve got good news!',
+                    "es": ''
+                }
+            },
+            {
+                start: 6,
+                end: 12,
+                text: {
+                    "en": 'I have my friend Shannon here with me. I was thinking you two could get some grub. You know, tear it up, see what happens!',
+                    "es": ''
+                }
+            },
+            {
+                start: 14,
+                end: 15,
+                text: {
+                    "en": 'Open up!',
+                    "es": ''
+                }
+            },
+            {
+                start: 16,
+                end: 18,
+                text: {
+                    "en": 'Agnes! Agnes!',
+                    "es": 'Agnes! Agnes!'
+                }
+            },
+            {
+                start: 18,
+                end: 20,
+                text: {
+                    "en": 'Tell Jillian I\'m not here.',
+                    "es": ''
+                }
+            },
+            {
+                start: 20,
+                end: 22,
+                text: {
+                    "en": 'Gru\'s not here',
+                    "es": ''
+                }
+            },
+            {
+                start: 22,
+                end: 23,
+                text: {
+                    "en": 'Are you sure?',
+                    "es": ''
+                }
+            },
+            {
+                start: 24,
+                end: 25,
+                text: {
+                    "en": 'Yes, he just told me!',
+                    "es": ''
+                }
+            },
+            {
+                start: 27,
+                end: 30,
+                text: {
+                    "en": 'I mean no, he didn\'t just tell me',
+                    "es": ''
+                }
+            },
+            {
+                start: 31,
+                end: 33,
+                text: {
+                    "en": 'Agnes, where is Gru?',
+                    "es": ''
+                }
+            },
+            {
+                start: 34,
+                end: 37,
+                text: {
+                    "en": 'He\'s putting on lipstick!',
+                    "es": ''
+                }
+            },
+            {
+                start: 37,
+                end: 39,
+                text: {
+                    "en": 'He\'s swatting at flies!',
+                    "es": ''
+                }
+            },
+            {
+                start: 40,
+                end: 43,
+                text: {
+                    "en": 'He\'s chopping his head off!',
+                    "es": ''
+                }
+            },
+            {
+                start: 44,
+                end: 46,
+                text: {
+                    "en": 'He\'s... Pooping?',
+                    "es": ''
+                }
+            }
+        ]
+    },
+    // 'id' : {
+    //     id: '',
+    //     title: '',
+    //     originalLang: 'en',
+    //     subtitles: [
+    //         {
+    //             start: 0,
+    //             end: 1,
+    //             text: {
+    //                 "en": '',
+    //                 "es": ''
+    //             }
+    //         }
+    //     ]
+    // },
 }

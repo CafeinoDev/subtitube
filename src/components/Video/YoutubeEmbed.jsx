@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import PropTypes from "prop-types";
 import { Box, Center, Skeleton } from '@chakra-ui/react';
 import { SubtitleCards } from './SubtitleCards';
-import { useYoutube } from '../hooks/useYoutube';
-import { handleNextPrevButtons, handlePlay, handleSeekTo } from '../helpers/playerFunctions';
+import { useYoutube } from '../../hooks/useYoutube';
+import { handleNextPrevButtons, handlePlay, handleSeekTo } from '../../helpers/playerFunctions';
 import { YoutubeControls } from './YoutubeControls';
-import '../styles/app.css'
+import '../../styles/app.css'
 
 const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
   const {
@@ -20,6 +20,15 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
   } = useYoutube(null);
 
   useEffect(() => {
+  
+    return () => {
+      handleChange('playerLoaded', null);
+      window.YT = null;
+    }
+  }, [])
+  
+
+  useEffect(() => {
     const tag = document.createElement('script');
     tag.src = 'https://www.youtube.com/iframe_api';
     const firstScriptTag = document.getElementsByTagName('script')[0];
@@ -31,7 +40,7 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
         height,
         width,
         videoId: video.id,
-        playerVars: { 'controls': '0', 'cc_lang_pref': 'sg' },
+        playerVars: { controls: '0', autoplay: '0' },
         events: {
           'onReady': onPlayerReady,
           'onStateChange': onPlayerStateChange
@@ -40,32 +49,48 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
 
       handleChange('player', newPlayer);
     };
+
+    return () => {
+      handleChange('player', null);
+      tag.remove();
+      handleChange('playerLoaded', false);
+      delete window.onYouTubeIframeAPIReady;
+    };
   }, [video]);
+
+
   useEffect(() => {
+    if(intervalId){
+      clearInterval(intervalId);
+    }
     if (player && playerLoaded) {
-      handleChange('intervalId', setInterval(() => {
-        if (player.getPlayerState() === window.YT.PlayerState.PLAYING) {
+      const intervalNewId = setInterval(() => {
+        if (window.YT && player.getPlayerState() === window.YT.PlayerState?.PLAYING) {
           onPlayerStateChange({ target: player, currentSubtitleIndex });
         }
-      }, 100));
+      }, 100);
+
+      handleChange('intervalId', intervalNewId);
   
       return () => clearInterval(intervalId);
     }
   }, [player, playerLoaded]);
   
+
   useEffect( ()  => {
-    if(repeat && actualSubtitle >= 0 && (actualSubtitle !== currentSubtitleIndex)){
-      handleSeekTo(player, video.subtitles[actualSubtitle].start);
+    if((typeof actualSubtitle != 'boolean' && actualSubtitle != null) && repeat && actualSubtitle >= 0 && (actualSubtitle !== currentSubtitleIndex)){
+      handleSeekTo(player, video.subtitles[actualSubtitle]?.start);
       return;
     }
 
     handleChange('actualSubtitle', currentSubtitleIndex);
+
+    return () => { handleChange('actualSubtitle', null) }
   }, [currentSubtitleIndex]);
+
 
   const onPlayerReady = (event) => {
     handleChange('playerLoaded', true);
-    // event.target.playVideo();
-    event.target.seekTo(14);
   }
 
   const onPlayerStateChange = (event) => {
@@ -104,7 +129,7 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
           handlePlay={ handlePlay }
         />
 
-        <Box mt={3} >
+        <Box mt={3} display={ playerLoaded ? 'block' : 'none' }>
           <SubtitleCards subtitles={ video.subtitles } currentSubtitle={ actualSubtitle } />
         </Box>
       </Box>
