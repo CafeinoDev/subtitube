@@ -2,15 +2,16 @@ import { useState } from "react";
 
 export const useYoutube = () => {
     const [currentSubtitleIndex, setCurrentSubtitleIndex] = useState(null);
-    const [intervalId, setIntervalId] = useState(null);
     const [player, setPlayer] = useState(null);
     const [playerLoaded, setPlayerLoaded] = useState(false);
     const [actualSubtitle, setActualSubtitle] = useState(false);
     const [repeat, setRepeat] = useState(false);
     const [playerState, setPlayerState] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
+    const [videoDuration, setVideoDuration] = useState(0);
+    const [isPlaying, setIsPlaying] = useState(false);
 
-    const handleChange = (type, payload) => {
+    const handleChange = (type, payload = '') => {
         switch(type){
             case 'actualSubtitle':
                 setActualSubtitle(payload);
@@ -20,9 +21,6 @@ export const useYoutube = () => {
             break;
             case 'currentTime':
                 setCurrentTime( payload );
-            break;
-            case 'intervalId':
-                setIntervalId(payload);
             break;
             case 'player':
                 setPlayer(payload);
@@ -36,6 +34,12 @@ export const useYoutube = () => {
             case 'repeat':
                 setRepeat( prev => !prev );
             break;
+            case 'videoDuration':
+                setVideoDuration(payload);
+            break;
+            case 'isPlaying':
+                setIsPlaying(prev => !prev);
+            break;
         }
     }
     return {
@@ -43,10 +47,11 @@ export const useYoutube = () => {
         currentSubtitleIndex,
         currentTime,
         handleChange,
-        intervalId,
         player,
         playerLoaded,
         playerState,
         repeat,
+        videoDuration,
+        isPlaying,
     };
 }

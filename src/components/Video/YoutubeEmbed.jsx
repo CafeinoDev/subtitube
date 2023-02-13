@@ -6,6 +6,7 @@ import { useYoutube } from '../../hooks/useYoutube';
 import { handleNextPrevButtons, handlePlay, handleSeekTo } from '../../helpers/playerFunctions';
 import { YoutubeControls } from './YoutubeControls';
 import '../../styles/app.css'
+import { ProgressBar } from './ProgressBar';
 
 const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
   const {
@@ -13,11 +14,12 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
       currentSubtitleIndex,
       currentTime,
       handleChange,
-      intervalId,
       player,
       playerLoaded,
       playerState,
       repeat,
+      videoDuration,
+      isPlaying,
   } = useYoutube(null);
 
   useEffect(() => {
@@ -83,6 +85,13 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
     };
   }, [video]);
   
+  
+  useEffect(() => {
+    if(player && playerLoaded){
+      handleChange('videoDuration', player.getDuration());
+    }
+  }, [player, playerLoaded])
+
   useEffect(() => {
     if (window.YT && player.getPlayerState() === window.YT.PlayerState?.PLAYING) {
       onPlayerStateChange({ target: player, currentSubtitleIndex });
@@ -100,12 +109,15 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
     return () => { handleChange('actualSubtitle', null) }
   }, [currentSubtitleIndex]);
 
-
-  const onPlayerReady = (event) => {
+  const onPlayerReady = () => {
     handleChange('playerLoaded', true);
   }
 
   const onPlayerStateChange = (event) => {
+    if(event.data === window.YT.PlayerState?.ENDED){
+      handleChange('playerState', false);
+    }
+
     const currentTime = event.target.getCurrentTime();
     const nextSubtitleIndex = video.subtitles.findIndex(subtitle => subtitle.start <= currentTime && subtitle.end > currentTime);
 
@@ -126,6 +138,10 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
 
         <Skeleton mt={3} height="40px" isLoaded={playerLoaded} display={ playerLoaded ? 'none' : 'block' } />
 
+        {
+          playerLoaded && <ProgressBar handleChange={ handleChange } videoDuration={videoDuration} currentTime={ currentTime } handleSeekTo={ handleSeekTo } player={ player } />
+        }
+
         <YoutubeControls 
           actualSubtitle={ actualSubtitle } 
           handleChange={ handleChange } 
@@ -138,6 +154,7 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
           handleSeekTo={ handleSeekTo }
           handlePlay={ handlePlay }
         />
+
 
         <Box mt={3} display={ playerLoaded ? 'block' : 'none' }>
           <SubtitleCards subtitles={ video.subtitles } currentSubtitle={ actualSubtitle } />
