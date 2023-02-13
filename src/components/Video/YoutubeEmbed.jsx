@@ -30,6 +30,7 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
   
 
   useEffect(() => {
+    // Creating and appending youtube video iframe
     const tag = document.createElement('script');
     tag.src = 'https://www.youtube.com/iframe_api';
     const firstScriptTag = document.getElementsByTagName('script')[0];
@@ -48,7 +49,30 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
         }
       });
 
+      // Store player
       handleChange('player', newPlayer);
+
+      // Handle current video time
+      const iframeWindow = newPlayer.getIframe().contentWindow;
+
+      window.addEventListener("message", function(event) {
+        if(event.source == iframeWindow){
+          var data = JSON.parse(event.data);
+
+          if(
+            data.event === "infoDelivery" &&
+            data.info &&
+            data.info.currentTime
+          ){
+            const time = Math.floor(data.info.currentTime);
+
+            if (time !== currentTime) {
+              handleChange('currentTime', time);
+            }
+          }
+        }
+      });
+
     };
 
     return () => {
@@ -58,25 +82,12 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
       delete window.onYouTubeIframeAPIReady;
     };
   }, [video]);
-
-
+  
   useEffect(() => {
-    if(intervalId){
-      clearInterval(intervalId);
+    if (window.YT && player.getPlayerState() === window.YT.PlayerState?.PLAYING) {
+      onPlayerStateChange({ target: player, currentSubtitleIndex });
     }
-    if (player && playerLoaded) {
-      const intervalNewId = setInterval(() => {
-        if (window.YT && player.getPlayerState() === window.YT.PlayerState?.PLAYING) {
-          onPlayerStateChange({ target: player, currentSubtitleIndex });
-        }
-      }, 100);
-
-      handleChange('intervalId', intervalNewId);
-  
-      return () => clearInterval(intervalId);
-    }
-  }, [player, playerLoaded]);
-  
+  }, [currentTime])
 
   useEffect( ()  => {
     if((typeof actualSubtitle != 'boolean' && actualSubtitle != null) && repeat && actualSubtitle >= 0 && (actualSubtitle !== currentSubtitleIndex)){
@@ -95,9 +106,7 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
   }
 
   const onPlayerStateChange = (event) => {
-    const { target, data } = event;
-
-    const currentTime = target.getCurrentTime();
+    const currentTime = event.target.getCurrentTime();
     const nextSubtitleIndex = video.subtitles.findIndex(subtitle => subtitle.start <= currentTime && subtitle.end > currentTime);
 
     handleChange('currentSubtitleIndex', nextSubtitleIndex);

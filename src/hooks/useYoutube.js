@@ -8,7 +8,7 @@ export const useYoutube = () => {
     const [actualSubtitle, setActualSubtitle] = useState(false);
     const [repeat, setRepeat] = useState(false);
     const [playerState, setPlayerState] = useState(false);
-    const [currentTime, setCurrentTime] = useState(false);
+    const [currentTime, setCurrentTime] = useState(0);
 
     const handleChange = (type, payload) => {
         switch(type){
