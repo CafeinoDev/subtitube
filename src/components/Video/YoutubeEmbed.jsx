@@ -18,8 +18,7 @@ const YoutubeEmbed = ({ video, width = 640, height = 360 }) => {
       playerLoaded,
       playerState,
       repeat,
-      videoDuration,
-      isPlaying,
+      videoDuration
   } = useYoutube(null);
 
   useEffect(() => {

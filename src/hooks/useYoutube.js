@@ -9,7 +9,6 @@ export const useYoutube = () => {
     const [playerState, setPlayerState] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [videoDuration, setVideoDuration] = useState(0);
-    const [isPlaying, setIsPlaying] = useState(false);
 
     const handleChange = (type, payload = '') => {
         switch(type){
@@ -37,9 +36,6 @@ export const useYoutube = () => {
             case 'videoDuration':
                 setVideoDuration(payload);
             break;
-            case 'isPlaying':
-                setIsPlaying(prev => !prev);
-            break;
         }
     }
     return {
@@ -52,6 +48,5 @@ export const useYoutube = () => {
         playerState,
         repeat,
         videoDuration,
-        isPlaying,
     };
 }
